@@ -14,7 +14,7 @@ using namespace std;
 // Set your CPU's L1 data cache size (in bytes) here
 const int L1D_CACHE_SIZE = 32000;
 
-const int64_t NUMBERS = 1000000;
+const int64_t NUMBERS = 10000000;
 
 bool esPar(int64_t num){
 	if(num % 2 == 0)
