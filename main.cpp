@@ -11,124 +11,20 @@
 
 using namespace std;
 
-/// Set your CPU's L1 data cache size (in bytes) here
+// Set your CPU's L1 data cache size (in bytes) here
 const int L1D_CACHE_SIZE = 32000;
 
 const int64_t NUMBERS = 1000000;
 
-// FUNCTIONS CONSTANTS
-const int EULER_MAX = 1000;		// 1-41
-const int LEGENDRE_MAX = 1000;	// 0-16
-
-int64_t* Custom(){
-
-	int64_t *matrix;
-	matrix = new int64_t[EULER_MAX];	
-	int64_t a = 1;
-	int64_t b = 4;
-	double c = 4;
-
-	// (b*pow(i,2.0)) + (c*i) - 397; -> Linia con muchos primos
-
-	for(int64_t i = 0; i < EULER_MAX; i++){
-		matrix[i] = (b*pow(i,2.0)) + (c*i) - 397;
-		//matrix[i] = (a*pow(i,3.0)) + (b*pow(i,2.0)) + (c*i) + 1;
-	}
-
-	return matrix;
-
-}
-int64_t* Custom2(){
-
-	int64_t *matrix;
-	matrix = new int64_t[EULER_MAX];
-	int64_t a = 1;
-	int64_t b = 1;
-
-	for(int i = 0; i < EULER_MAX; i++){
-		matrix[i] = (a*pow(i,2.0)) + i + 1;
-	}
-
-	return matrix;
-
-}
-int64_t* Legendre(){
-
-	int64_t *matrix;
-	matrix = new int64_t[LEGENDRE_MAX];
-
-	for(int i = 0; i < LEGENDRE_MAX; i++){
-		matrix[i] = pow(i, 2.0) + i + 17;
-	}
-
-	return matrix;
-
-}
-int64_t* Euler(){
-
-	int64_t *matrix;
-	matrix = new int64_t[EULER_MAX+1];
-
-	for(int i = 0; i < EULER_MAX+1; i++){
-		matrix[i] = pow(i, 2.0) - i + 41;
-	}
-
-	return matrix;
-
-}
-
-bool isOnMatrix(int64_t *matrix, int64_t number, int64_t max){
-
-	for(int i = 0; i < max; i++){
-		if(matrix[i] == number){
-			return true;
-		}
-	}
-
-	return false;
-
-}
 bool esPar(int64_t num){
 	if(num % 2 == 0)
 		return true;
 	else
 		return false;
 }
-bool esPrimo(int64_t i){
-
-	int64_t j;
-	int64_t t;
-
-	if(i == 1 || i == 2)
-		return false;
-
-	t = true;
-
-	for(j = 2; j < i-1; j++){
-		if(i % j == 0){
-			t = false;
-			j = i;
-		}
-	}
-
-	if(t > 0)
-		return true;
-	else
-		return false;
-
-}
 
 void main()
 {
-	//comparison_test();
-	//sum_test();
-	//minus_test();
-	//multiply_test();
-	//division_test();
-	/*// Central point
-	draw.pen_color(255,0,255);
-	draw.dot(ini_x,ini_y);*/
-
 	bool salir = false;
 	int64_t numero = NUMBERS;
 
@@ -147,10 +43,6 @@ void main()
 	int64_t dir = 0;
 	int64_t image_width = 0;
 	int64_t imatge_height = 0;
-
-	int64_t *custom = Custom();
-	int64_t *euler = Euler();
-	int64_t *legendre = Legendre();	
 
 	cout << endl << "Calculating image dimensions..." << endl;
 
@@ -206,10 +98,15 @@ void main()
 
 	// generate small primes <= sqrt
 	vector<char> is_prime(sqrtt + 1, 1);
+
 	for (int64_t i = 2; i * i <= sqrtt; i++)
+	{
 		if (is_prime[i])
+		{
 			for (int64_t j = i * i; j <= sqrtt; j += i)
-			is_prime[j] = 0;
+				is_prime[j] = 0;
+		}
+	}
 
 	vector<int> primes;
 	vector<int> next;
@@ -239,52 +136,13 @@ void main()
 			next[i] = j - L1D_CACHE_SIZE;
 		}
 
-		for (; n <= high; n += 1){
-
-			//cout << n << endl;
-
-			//double percen = ((double)n / (double)numero) * 100;
-			//int percen_int = floor(percen);
-
-			/*if(percen_int > que_porcentaje_hemos_superado){
-				que_porcentaje_hemos_superado = percen_int;
-				printar_porcentaje = true;}
-
-			if(printar_porcentaje){
-				//cout << que_porcentaje_hemos_superado << "%" << endl;
-				printar_porcentaje = false;}
-				*/
-
-			if(isOnMatrix(custom,n,EULER_MAX)){
-				//draw.pen_color(255,255,255);	// Blanco
-				//draw.dot(offset_x,offset_y);
-				//draw.pen_color(0,255,0);
-			} else if(isOnMatrix(euler,n,EULER_MAX)){
-				//draw.pen_color(255,0,255);
-				//draw.dot(offset_x,offset_y);
-				//draw.pen_color(0,255,0);
-			} else {
-				//draw.dot(offset_x,offset_y);
-			}
-			
-			if(n % 2 != 0)
+		for (; n <= high; n += 1)
+		{
+			if(n % 2 != 0)	// If it's prime
 			{
-				// If it's prime
 				if (sieve[n - low])
 				{		  
 				  count++;
-				  
-				  if(isOnMatrix(custom,n,EULER_MAX)){
-					  //draw.pen_color(255,0,0);	// Rojo
-					  //draw.dot(offset_x,offset_y);
-					  //draw.pen_color(0,255,0);
-				  } else if(isOnMatrix(euler,n,EULER_MAX)){
-					  //draw.pen_color(0,0,255);
-					  //draw.dot(offset_x,offset_y);
-					  //draw.pen_color(0,255,0);
-				  } else {
-					  draw.dot(offset_x,offset_y);
-				  }
 				}
 			}
 
@@ -321,10 +179,6 @@ void main()
 
 		}
 	}
-
-	delete []custom;
-	delete []euler;
-	delete []legendre;	
 
 	time(&final);
 
